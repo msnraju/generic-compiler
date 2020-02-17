@@ -1,6 +1,6 @@
 {
   "name": "@msnraju/generic-compiler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,15 @@
   "keywords": [],
   "author": "MSN Raju",
   "license": "MIT",
+  "homepage": "https://github.com/msnraju/generic-compiler#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/msnraju/generic-compiler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/msnraju/generic-compiler/issues"
+  },
+
   "dependencies": {
     "typescript": "^3.7.5"
   },
