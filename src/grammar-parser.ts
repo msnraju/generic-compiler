@@ -27,7 +27,8 @@ export default class GrammarParser {
         const tokens: Array<IToken> = this.getTokens(grammar.tokens, code);
         const prodExprNodes = this.prepareGrammar(grammar);
 
-        const exprNode = prodExprNodes.find((item) => item.name == grammar.start)?.exprTree;
+        const prodExprNode = prodExprNodes.find((item) => item.name == grammar.start);
+        const exprNode = prodExprNode ? prodExprNode.exprTree : null;
         if (exprNode == null)
             throw new Error(`Internal Error, Start production '${grammar.start}' not found.`);
 
@@ -112,8 +113,8 @@ export default class GrammarParser {
                     break;
                 } case GrammarExprNodeType.NON_TERMINAL: {
                     let nodes: Array<IParseTreeNode> = [];
-
-                    const exprNode = context.prodExprNodes.find((item) => item.name == node.value)?.exprTree;
+                    const prodExprNode = context.prodExprNodes.find((item) => item.name == node.value);
+                    const exprNode = prodExprNode ? prodExprNode.exprTree : null;
                     if (exprNode == null)
                         throw new Error(`Expression not evaluated for the production '${node.value}'.`);
 

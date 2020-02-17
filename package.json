@@ -1,14 +1,19 @@
 {
   "name": "@msnraju/generic-compiler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.ts",
   "scripts": {
-    "watch": "tsc -w --outDir bin",
-    "build": "tsc --outDir bin",
+    "watch": "tsc -w --outDir lib",
+    "build": "tsc --outDir lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "compiler",
+    "lexer",
+    "parse tree",
+    "abstract syntax tree"
+  ],
   "author": "MSN Raju",
   "license": "MIT",
   "homepage": "https://github.com/msnraju/generic-compiler#readme",

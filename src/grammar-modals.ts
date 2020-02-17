@@ -27,7 +27,7 @@ export interface IGrammarExprNode {
     group?: number;
 }
 
-declare interface IProduction {
+export interface IProduction {
     name: string;
     expression: string;
 }
