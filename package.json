@@ -1,8 +1,9 @@
 {
   "name": "@msnraju/generic-compiler",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "lib/index.ts",
+  "types": "lib",
   "scripts": {
     "watch": "tsc -w --outDir lib",
     "build": "tsc --outDir lib",
