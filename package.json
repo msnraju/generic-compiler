@@ -1,12 +1,13 @@
 {
   "name": "@msnraju/generic-compiler",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
-  "main": "lib/index.js",
+  "main": "lib/bundle.js",
+  "module": "lib/bundle.es.js",
   "types": "lib",
   "scripts": {
     "watch": "tsc -w --outDir lib",
-    "build": "tsc --outDir lib",
+    "build": "rimraf lib && rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -29,6 +30,12 @@
     "typescript": "^3.7.5"
   },
   "devDependencies": {
-    "@types/node": "^13.1.8"
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "@types/node": "^13.1.8",
+    "rimraf": "^3.0.2",
+    "rollup": "^1.31.1",
+    "rollup-plugin-terser": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.26.0"
   }
 }
