@@ -1,8 +1,8 @@
 {
   "name": "@msnraju/generic-compiler",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "description": "",
-  "main": "lib/index.ts",
+  "main": "lib/index.js",
   "types": "lib",
   "scripts": {
     "watch": "tsc -w --outDir lib",
@@ -25,7 +25,6 @@
   "bugs": {
     "url": "https://github.com/msnraju/generic-compiler/issues"
   },
-
   "dependencies": {
     "typescript": "^3.7.5"
   },
