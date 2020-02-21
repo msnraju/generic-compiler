@@ -1,0 +1,14 @@
+export enum NodeType {
+    // GROUPS
+    ROOT = 'ROOT',
+    GROUP = 'GROUP',
+    CHARACTER_SET = 'CHARACTER_SET',
+    RANGE = 'RANGE',
+    ALTERNATE_SET = 'ALTERNATE_SET',
+
+    // CONDITION
+    ALTERNATION = 'ALTERNATION',
+
+    // SIMPLE CHARACTERS
+    VALUE = 'VALUE',
+}

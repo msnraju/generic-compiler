@@ -1,9 +1,4 @@
-import { ILexRule } from "./lexer";
-
-export enum GrammarRuleName {
-    'SKIP' = '__SKIP__',
-    'ERROR' = '__ERROR__'
-}
+import { ILexRule } from '@msnraju/lexer';
 
 export interface IGrammarExprQuantifier {
     min: number | null;

@@ -1,6 +1,6 @@
 import { GrammarExprParser } from "./grammar-expr-parser";
-import Lexer, { IToken, ILexRule } from "./lexer";
-import { IGrammarExprNode, GrammarExprNodeType, IGrammar, IParseTreeNode, GrammarRuleName } from "./grammar-modals";
+import { IGrammarExprNode, GrammarExprNodeType, IGrammar, IParseTreeNode } from "./grammar-modals";
+import { IToken, Lexer } from "@msnraju/lexer";
 
 interface IGetNodeResult {
     detail?: {
@@ -24,7 +24,7 @@ interface IProductionExpr {
 
 export default class GrammarParser {
     static parseTree(grammar: IGrammar, code: string): IParseTreeNode {
-        const tokens: Array<IToken> = this.getTokens(grammar.tokens, code);
+        const tokens: Array<IToken> = Lexer.tokens(grammar.tokens, code);
         const prodExprNodes = this.prepareGrammar(grammar);
 
         const prodExprNode = prodExprNodes.find((item) => item.name == grammar.start);
@@ -58,29 +58,10 @@ export default class GrammarParser {
         return prodExprs;
     }
 
-    private static getTokens(rules: Array<ILexRule>, code: string): Array<IToken> {
-        const tokens: Array<IToken> = [];
-
-        const lexer = new Lexer(rules, code);
-        let token = lexer.next();
-        while (token.TokenType != 'EOF') {
-            tokens.push(token);
-            token = lexer.next();
-        }
-
-        return tokens;
-    }
-
     private static getNode(context: IGetNodeContext, nodeType: string, parentNode: IGrammarExprNode, pos: number, level: number): IGetNodeResult {
         let tokensMatched = 0;
         let childNodes: Array<IParseTreeNode> = [];
 
-        function spaces(count: number) {
-            let spaces = '';
-            for (let i = 0; i < count; i++)
-                spaces += '\t';
-            return spaces;
-        }
 
         for (let nodeIndex = 0; parentNode.nodes && nodeIndex < parentNode.nodes.length; nodeIndex++) {
             const node = parentNode.nodes[nodeIndex];
@@ -138,11 +119,11 @@ export default class GrammarParser {
                     let nodes: Array<IParseTreeNode> = [];
                     let token = context.tokens[pos + tokensMatched];
 
-                    while (token && token.TokenType == node.value && quantity < max) {
+                    while (token && token.type == node.value && quantity < max) {
                         tokensMatched++;
                         quantity++;
 
-                        nodes.push({ type: node.value, value: token.value });
+                        nodes.push({ type: node.value || '', value: token.value });
                         token = context.tokens[pos + tokensMatched];
                     }
 

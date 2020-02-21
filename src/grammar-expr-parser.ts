@@ -1,5 +1,5 @@
-import Lexer, { ILexRule, IToken } from "./lexer";
-import { GrammarExprNodeType, IGrammarExprNode, GrammarRuleName, IGrammar } from "./grammar-modals";
+import { GrammarExprNodeType, IGrammarExprNode, IGrammar } from "./grammar-modals";
+import { IToken, ILexRule, Lexer, RuleName } from "@msnraju/lexer";
 
 export interface IParseContext {
     grammar: IGrammar;
@@ -27,19 +27,12 @@ export class GrammarExprParser {
         { name: TokenType.ZERO_OR_MORE, expression: '[*]' },
         { name: TokenType.LPAREN, expression: '\\(' },
         { name: TokenType.RPAREN, expression: '\\)' },
-        { name: GrammarRuleName.SKIP, expression: '[ \\t\\n]' },
-        { name: GrammarRuleName.ERROR, expression: '.' }
+        { name: RuleName.SKIP, expression: '[ \\t\\n]' },
+        { name: RuleName.ERROR, expression: '.' }
     ];
 
     static parseTree(grammar: IGrammar, expression: string): IGrammarExprNode {
-        const tokens: Array<IToken> = [];
-
-        const lexer = new Lexer(this.rules, expression)
-        let token = lexer.next();
-        while (token.TokenType != 'EOF') {
-            tokens.push(token);
-            token = lexer.next();
-        }
+        const tokens: Array<IToken> = Lexer.tokens(this.rules, expression);
 
         const exprTree = {
             type: GrammarExprNodeType.ROOT,
@@ -56,22 +49,22 @@ export class GrammarExprParser {
             let token = context.tokens[context.index];
             let element: IGrammarExprNode | null = null;
 
-            if (token.TokenType == TokenType.RPAREN) {
+            if (token.type == TokenType.RPAREN) {
                 return nodes;
             }
 
-            if (token.TokenType == TokenType.LPAREN) {
+            if (token.type == TokenType.LPAREN) {
                 context.index++;
                 context.group++;
                 const groupNumber = context.group;
                 const elements2 = this.parseInternal(context);
                 element = { type: GrammarExprNodeType.GROUP, nodes: elements2, group: groupNumber };
-                if (context.tokens[context.index].TokenType != TokenType.RPAREN)
+                if (context.tokens[context.index].type != TokenType.RPAREN)
                     throw new Error('Invalid expression');
 
                 context.index++;
                 this.quantifier(context, element);
-            } else if (token.TokenType == TokenType.ALTERNATION) {
+            } else if (token.type == TokenType.ALTERNATION) {
                 element = { type: GrammarExprNodeType.ALTERNATION, value: token.value };
                 context.index++;
             } else {
@@ -99,7 +92,7 @@ export class GrammarExprParser {
         let token = context.tokens[context.index];
 
         if (token)
-            switch (token.TokenType) {
+            switch (token.type) {
                 case TokenType.ZERO_OR_MORE:
                     node.quantifier = { min: 0, max: null };
                     context.index++;

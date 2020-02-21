@@ -7,6 +7,7 @@
   "types": "lib",
   "scripts": {
     "watch": "tsc -w --outDir lib",
+    "serve": "tsc -p . && node ./lib/main.js",
     "build": "rimraf lib && rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,6 +28,8 @@
     "url": "https://github.com/msnraju/generic-compiler/issues"
   },
   "dependencies": {
+    "@msnraju/lexer": "^1.0.2",
+    "@msnraju/reg-expressions": "^1.0.2",
     "typescript": "^3.7.5"
   },
   "devDependencies": {

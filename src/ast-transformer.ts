@@ -1,5 +1,6 @@
-import { IParseTreeNode, GrammarRuleName } from "./grammar-modals";
+import { IParseTreeNode } from "./grammar-modals";
 import { IASTNode, IASTTransformer } from "./ast-models";
+import { RuleName } from "@msnraju/lexer";
 
 export class ASTTransformer {
     static transform(parseTree: IParseTreeNode, transformer: IASTTransformer) {
@@ -17,7 +18,7 @@ export class ASTTransformer {
                 astNode = this.walk(node, transformer);
             }
 
-            if (astNode.type !== GrammarRuleName.SKIP)
+            if (astNode.type !== RuleName.SKIP)
                 astNodes.push(astNode);
         }
 
