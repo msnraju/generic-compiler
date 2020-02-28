@@ -1,4 +1,4 @@
-import { ILexRule } from '@msnraju/lexer';
+import { ILexRule } from "@msnraju/lexer";
 
 export interface IGrammarExprQuantifier {
     min: number | null;

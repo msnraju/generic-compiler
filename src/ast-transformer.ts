@@ -1,6 +1,6 @@
 import { IParseTreeNode } from "./grammar-modals";
 import { IASTNode, IASTTransformer } from "./ast-models";
-import { RuleName } from "@msnraju/lexer";
+import { RuleName } from '@msnraju/lexer';
 
 export class ASTTransformer {
     static transform(parseTree: IParseTreeNode, transformer: IASTTransformer) {

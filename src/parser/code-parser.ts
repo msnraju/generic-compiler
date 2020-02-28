@@ -1,5 +1,4 @@
 import { IGrammar } from "..";
-import { RegExpression, IMatch } from '@msnraju/reg-expressions';
 import { GrammarExpression } from "./grammar-expression";
 import { ICompiledLexRules } from "../models/compiled-lex-rules.model";
 import { ICompiledProductionRules } from "../models/compiled-production-rules.model";
@@ -21,7 +20,7 @@ export class CodeParser {
 
         for (let i = 0; i < this.grammar.tokens.length; i++) {
             const rule = this.grammar.tokens[i];
-            this.lexRules[rule.name] = new RegExpression(rule.expression);
+            this.lexRules[rule.name] = new RegExp(rule.expression, 'g');
         }
 
         this.prodRules = {};

@@ -20,15 +20,15 @@ export enum TokenType {
 
 export class GrammarExprParser {
     private static rules: Array<ILexRule> = [
-        { name: TokenType.IDENTIFIER, expression: '[a-zA-Z_]*' },
-        { name: TokenType.ALTERNATION, expression: '\\|' },
-        { name: TokenType.ONE_OR_MORE, expression: '[+]' },
-        { name: TokenType.ZERO_OR_ONE, expression: '[?]' },
-        { name: TokenType.ZERO_OR_MORE, expression: '[*]' },
-        { name: TokenType.LPAREN, expression: '\\(' },
-        { name: TokenType.RPAREN, expression: '\\)' },
-        { name: RuleName.SKIP, expression: '[ \\t\\n]' },
-        { name: RuleName.ERROR, expression: '.' }
+        { name: TokenType.IDENTIFIER, expression: /[a-zA-Z_]*/ },
+        { name: TokenType.ALTERNATION, expression: /\|/ },
+        { name: TokenType.ONE_OR_MORE, expression: /\+/ },
+        { name: TokenType.ZERO_OR_ONE, expression: /\?/ },
+        { name: TokenType.ZERO_OR_MORE, expression: /\*/ },
+        { name: TokenType.LPAREN, expression: /\(/ },
+        { name: TokenType.RPAREN, expression: /\)/ },
+        { name: RuleName.SKIP, expression: /[ \t\n]/ },
+        { name: RuleName.ERROR, expression: /./ }
     ];
 
     static parseTree(grammar: IGrammar, expression: string): IGrammarExprNode {

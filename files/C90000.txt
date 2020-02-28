@@ -1,0 +1,31 @@
+OBJECT Codeunit 90000 Test
+{
+  OBJECT-PROPERTIES
+  {
+    Date=02/21/20;
+    Time=[ 5:36:16 PM];
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      "MSN  ;"Raju"@1000000000 : Integer;
+      Text001@1000000001 : TextConst 'ENU="MSN; Raju";ENN="Raju; MSN"';
+      Text002@1000000002 : TextConst 'ENU=MSN'' "Raju"';
+      Text003@1000000003 : TextConst 'ENU=MSN'' "Raju";AMH=MSN'' "Raju"';
+
+    BEGIN
+    {
+      Documentation MSN Raju
+    }
+    END.
+  }
+}
+

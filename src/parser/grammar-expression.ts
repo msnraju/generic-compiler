@@ -7,14 +7,15 @@ import { NodeType } from "../enums/node-type.enum";
 import { Labels } from "../constants/labels";
 import { ICompiledLexRules } from "../models/compiled-lex-rules.model";
 import { ICompiledProductionRules } from "../models/compiled-production-rules.model";
-import { RegExpression } from "@msnraju/reg-expressions";
 import { ICodeParserResult } from "../models/code-parser-result.model";
+
+export let maxIndex: number = 0;
 
 interface IContext {
     index: INumberRef;
     node: INode;
     input: string;
-    match: ICodeParserResult;
+    result: ICodeParserResult;
 }
 
 export class GrammarExpression {
@@ -22,13 +23,11 @@ export class GrammarExpression {
     private syntaxTree: INode | undefined;
     private lexRules: ICompiledLexRules;
     private prodRules: ICompiledProductionRules;
-    private ignoreExpression: RegExpression;
 
     constructor(expression: string, lexRules: ICompiledLexRules, prodRules: ICompiledProductionRules) {
         this.expression = expression;
         this.lexRules = lexRules;
         this.prodRules = prodRules;
-        this.ignoreExpression = new RegExpression('[\\s\\r\\n]*');
     }
 
     getSyntaxTree(): INode {
@@ -42,13 +41,17 @@ export class GrammarExpression {
 
     match(input: string, index: number = 0): ICodeParserResult {
         this.getSyntaxTree();
-        const match: ICodeParserResult = { length: 0, node: { type: 'ROOT', nodes: [] } };
+
+        const match: ICodeParserResult = {
+            length: 0,
+            node: { type: 'ROOT', nodes: [] }
+        };
 
         const context: IContext = {
             index: { value: index },
             node: this.syntaxTree as INode,
             input: input,
-            match: match
+            result: match
         };
 
         if (this.walk(context))
@@ -59,12 +62,13 @@ export class GrammarExpression {
 
     private walk(context: IContext): boolean {
         const { index, node, input } = context;
+
         const startIndex = index.value;
         if (index.value < input.length) {
             switch (node.type) {
                 case NodeType.ROOT:
                     if (this.checkQuantifier(context, this.matchNodes)) {
-                        context.match.length = index.value - startIndex;
+                        context.result.length = index.value - startIndex;
                         return true;
                     } else
                         return false;
@@ -149,30 +153,40 @@ export class GrammarExpression {
         const startIndex = index.value;
         this.ignoreWhiteSpaces(input, index);
 
-        if (node.value == 'TRIGGER')
-            console.log();
-
         if (this.lexRules[node.value]) {
-            const match = this.lexRules[node.value].match(input, index.value);
-            if (match.length > 0) {
-                if (context.match.node.nodes)
-                    context.match.node.nodes.push({ type: node.value, value: match[0], index: index.value });
+            const expr = this.lexRules[node.value];
+            expr.lastIndex = index.value;
+            const match = expr.exec(input);
+            if (match && match.index == index.value && match[0].length != 0) {
+                if (context.result.node.nodes)
+                    context.result.node.nodes.push({ type: node.value, value: match[0], index: index.value });
 
-                index.value += match.length;
+                index.value += match[0].length;
+                if (maxIndex < index.value)
+                    maxIndex = index.value;
+
+                console.log(`${node.value}, value: ${match[0]}`);
                 return true;
             }
-        } else if (this.prodRules[node.value]) {
+        } else if (this.prodRules[node.value]) {            
+            if (node.value == 'FUNCTION')
+                console.log('')
+            
             const match = this.prodRules[node.value].match(input, index.value);
             if (match.length > 0) {
                 index.value += match.length;
 
-                if (context.match.node.nodes) {
+                if (context.result.node.nodes) {
                     match.node.type = node.value;
-                    context.match.node.nodes.push(match.node);
+                    context.result.node.nodes.push(match.node);
                 }
 
                 return true;
             }
+
+            if (node.value == 'FUNCTION')
+                console.log('')
+
         } else {
             throw new Error(`Rule not found for ${node.value}`);
         }
@@ -181,24 +195,38 @@ export class GrammarExpression {
         return false;
     }
 
-    private ignoreWhiteSpaces(input: string, index: INumberRef) {
-        const match = this.ignoreExpression.match(input, index.value);
-        if (match) index.value += match.length;
-    }
-
     private matchNodes(context: IContext): boolean {
-        const { index, node } = context;
+        const { index, node, input } = context;
         const startIndex = index.value;
         let i = 0;
 
         for (i = 0; node.nodes && i < node.nodes.length; i++) {
-            if (!this.walk({ ...context, node: node.nodes[i] }))
+            const nodeItem = node.nodes[i];
+            const start2 = index.value;
+            if (!this.walk({ ...context, node: nodeItem })) {
+                index.value = start2;
                 break;
+            }
         }
 
         if (node.nodes && i == node.nodes.length)
             return true;
 
+        index.value = startIndex;
         return false;
+    }
+
+    private ignoreWhiteSpaces(input: string, index: INumberRef) {
+        const expr = /[\s\r\n]*/g;
+        expr.lastIndex = index.value;
+        const match = expr.exec(input);
+        if (match)
+            index.value += match[0].length;
+
+        // const lineExpr = /.*/g;
+        // lineExpr.lastIndex = index.value;
+        // const m2 = lineExpr.exec(input);
+        // if (m2)
+        //     console.log(`TRUNCATE SPACES::  ${m2[0]}`);
     }
 }

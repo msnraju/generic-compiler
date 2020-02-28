@@ -28,13 +28,14 @@
     "url": "https://github.com/msnraju/generic-compiler/issues"
   },
   "dependencies": {
-    "@msnraju/lexer": "^1.0.2",
-    "@msnraju/reg-expressions": "^1.0.2",
+    "@msnraju/lexer": "^1.0.6",
+    "command-line-args": "^5.1.1",
     "typescript": "^3.7.5"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
+    "@types/command-line-args": "^5.0.0",
     "@types/node": "^13.1.8",
     "rimraf": "^3.0.2",
     "rollup": "^1.31.1",
